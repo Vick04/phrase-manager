@@ -1,10 +1,12 @@
 import { useCallback, useEffect, useState } from "react";
 import "@/App.css";
-import { TextField } from "@mui/material";
 
 import Card from "@components/Card";
 import Button from "@components/Button";
-import useListManager from "./hooks/useListManager";
+import { INPUT_MINIMUM_CHARACTERS } from "@/constants";
+import useListManager from "@/hooks/useListManager";
+import useDebounce from "@/hooks/useDebounce";
+import InputWithValidation from "./components/InputWithValidation";
 
 function App() {
   const [inputPhrase, setInputPhrase] = useState("");
@@ -12,9 +14,16 @@ function App() {
 
   const { state, dispatch } = useListManager();
 
+  const debouncedSearchTerm = useDebounce(inputSearch, 1500);
+
+  const SEARCH_IS_ACTIVE =
+    debouncedSearchTerm.length >= INPUT_MINIMUM_CHARACTERS;
+
   useEffect(() => {
-    dispatch({ type: "FILTER_ITEM", payload: inputSearch });
-  }, [dispatch, inputSearch]);
+    if (debouncedSearchTerm)
+      if (SEARCH_IS_ACTIVE)
+        dispatch({ type: "FILTER_ITEM", payload: debouncedSearchTerm });
+  }, [SEARCH_IS_ACTIVE, debouncedSearchTerm, dispatch]);
 
   const add = () => {
     dispatch({ type: "ADD_ITEM", payload: inputPhrase });
@@ -36,7 +45,7 @@ function App() {
 
       {/*ADD PHRASE INPUT + BUTTON*/}
       <div className="grid grid-cols-4 gap-3 grow-0">
-        <TextField
+        <InputWithValidation
           label="Escribir frase"
           onChange={(e) => setInputPhrase(e.target.value)}
           value={inputPhrase}
@@ -49,7 +58,7 @@ function App() {
 
       {/*SEARCH PHRASE INPUT*/}
       <div className="grid gap-3 grow-0">
-        <TextField
+        <InputWithValidation
           label="Buscar frase"
           onChange={(e) => setInputSearch(e.target.value)}
           type="search"
@@ -59,12 +68,12 @@ function App() {
       {/*-------------------*/}
 
       {/*CONDITIONAL RENDERING SECTION: SHOWS EMPTY MESSAGE, FULL LIST OR FILTERED LIST*/}
-      {inputSearch.length !== 0 && state.filteredList.length === 0 && (
+      {SEARCH_IS_ACTIVE && state.filteredList.length === 0 && (
         <h1>No se encontraron coincidencias</h1>
       )}
       <div className="grow">
-        <div className="grid gap-4 py-4">
-          {inputSearch.length !== 0 &&
+        <div className="grid grid-cols-1 md:grid-cols-3 xl:grid-cols-5 gap-4 py-4">
+          {SEARCH_IS_ACTIVE &&
             state.filteredList.length > 0 &&
             state.filteredList.map((phrase, index) => (
               <Card key={`${phrase}-${index}`} onDelete={remove}>
@@ -72,7 +81,7 @@ function App() {
               </Card>
             ))}
 
-          {inputSearch.length === 0 &&
+          {!SEARCH_IS_ACTIVE &&
             state.fullList.map((phrase, index) => (
               <Card key={`${phrase}-${index}`} onDelete={remove}>
                 {phrase}

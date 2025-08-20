@@ -1,4 +1,5 @@
 @import "tailwindcss";
+@import "./assets/styles/MaterialUICustom.css";
 
 html,
 body {
@@ -12,4 +13,12 @@ body {
   padding: 2rem;
   text-align: center;
   width: 100%;
+}
+
+button {
+  cursor: pointer;
+}
+
+button:disabled {
+  cursor: default;
 }

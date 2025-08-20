@@ -1,0 +1,1 @@
+export const INPUT_MINIMUM_CHARACTERS = 3;

@@ -16,7 +16,7 @@ const Card = ({ children, onDelete }: props) => {
     <>
       <div className="content-center rounded-2xl shadow font-bold p-6 relative w-full">
         {/*DELETE BUTTON*/}
-        <button onClick={() => setOpen(true)}>
+        <button className="cursor-pointer" onClick={() => setOpen(true)}>
           <TrashIcon className="absolute right-3 top-3 size-4" />
         </button>
         {/*-------------*/}

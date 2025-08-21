@@ -1,53 +1,47 @@
-import { useReducer } from "react";
+import { useReducer } from 'react'
 
-const useListManager = () => {
-  type stateProps = {
-    fullList: string[];
-    filteredList: string[];
-  };
+import useLocalStorage from '@/hooks/useLocalStorage'
 
-  const initialState: stateProps = { filteredList: [], fullList: [] };
+const useListManager = <T extends { id: string }>(
+    key: string,
+    initialValue: T[]
+) => {
+    const { value, setValue } = useLocalStorage(key, initialValue)
 
-  function reducer(
-    state: stateProps,
-    action: {
-      payload: string;
-      type: "ADD_ITEM" | "REMOVE_ITEM" | "FILTER_ITEM" | "RESET";
+    const initialState = value || []
+
+    const reducer = (
+        state: T[],
+        action: {
+            payload: T
+            type: 'ADD_ITEM' | 'REMOVE_ITEM' | 'RESET'
+        }
+    ) => {
+        let newList: T[]
+
+        switch (action.type) {
+            case 'ADD_ITEM':
+                newList = [...value, action.payload]
+                setValue(newList)
+                return newList
+            case 'REMOVE_ITEM':
+                newList = state.filter((item) => item.id !== action.payload.id)
+                setValue(newList)
+                return newList
+            case 'RESET':
+                setValue(initialState)
+                return initialState
+            default:
+                throw new Error(`Tipo de acción desconocida: ${action.type}`)
+        }
     }
-  ) {
-    switch (action.type) {
-      case "ADD_ITEM":
-        return { ...state, fullList: [...state.fullList, action.payload] };
-      case "REMOVE_ITEM":
-        return {
-          filteredList: state.filteredList.filter(
-            (item) => item !== action.payload
-          ),
-          fullList: state.fullList.filter(
-            (item) => item !== action.payload
-          ),
-        };
-      case "FILTER_ITEM": {
-        return {
-          ...state,
-          filteredList: state.fullList.filter((item) =>
-            item.toLowerCase().includes(action.payload.toLowerCase())
-          ),
-        };
-      }
-      case "RESET":
-        return initialState;
-      default:
-        throw new Error(`Tipo de acción desconocida: ${action.type}`);
+
+    const [state, dispatch] = useReducer(reducer, initialState)
+
+    return {
+        state,
+        dispatch,
     }
-  }
+}
 
-  const [state, dispatch] = useReducer(reducer, initialState);
-
-  return {
-    state,
-    dispatch,
-  };
-};
-
-export default useListManager;
+export default useListManager

@@ -1,24 +1,24 @@
-@import "tailwindcss";
-@import "./assets/styles/MaterialUICustom.css";
+@import 'tailwindcss';
+@import './assets/styles/MaterialUICustom.css';
 
 html,
 body {
-  height: 100vh;
+    height: 100vh;
 }
 
 #root {
-  height: 100vh;
-  max-width: 1280px;
-  margin: 0 auto;
-  padding: 2rem;
-  text-align: center;
-  width: 100%;
+    height: 100vh;
+    max-width: 1280px;
+    margin: 0 auto;
+    padding: 2rem;
+    text-align: center;
+    width: 100%;
 }
 
 button {
-  cursor: pointer;
+    cursor: pointer;
 }
 
 button:disabled {
-  cursor: default;
+    cursor: default;
 }

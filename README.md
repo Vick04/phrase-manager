@@ -12,8 +12,10 @@ This project is a simple spa to add, find and delete short phrases.
 - Typescript 5.8
 - Material UI 7.3
 - Tailwind css 4.1
+- Vitest 3.2.4
+- React testing library 16.3.0
 
-## Scripts
+## 📑 Scripts
 
 **Run project**
 
@@ -61,3 +63,16 @@ npm run format
 
 3. **Open your browser:**
    Navigate to [http://localhost:3000](http://localhost:5173/)
+
+## 📏 Project architecture
+
+This is a SPA project that uses Vite + Typescript, with a flexible structure that allows it to be transformed into an MPA. It uses Tailwind CSS for layout and Material UI for complex display components (e.g., Dialogs). It uses Vitest + React Testing Library for unit and integration testing. The folders are organized as follows:
+
+- Assets: All style files, fonts, and multimedia.
+- Components: Custom components reusable throughout the app.
+- Constants: Necessary constant values.
+- Hooks: Custom hooks that can be used throughout the app.
+- Pages: Home page and future navigable pages.
+- Types: Custom types that represent the business domain.
+
+If necessary, the pages can have their own Components, Hooks, and Types folders, improving the domain definition.
